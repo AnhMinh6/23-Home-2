@@ -110,6 +110,42 @@ public:
     }
     }
 
+    static Matrix<T> zeroMatrix(int rows, int cols) // Конструктор нулевой матрицы
+    {
+        Matrix<T> zero(rows, cols);
+        return zero;
+    }
+
+    static Matrix<T> identityMatrix(int size) // Конструктор единичной матрицы
+    {
+        Matrix<T> identity(size, size);
+        for (int i = 0; i < size; i++)
+        {
+            for (int j = 0; j < size; j++)
+            {
+                identity.pMatrix[i * size + j] = (i == j) ? 1 : 0;
+            }
+        }
+        return identity;
+    }
+
+    Matrix& operator=(const Matrix& matrix) // Перегрузка оператора присваивания
+    {
+        if (this != &matrix)
+        {
+            delete[] pMatrix;
+            rows = matrix.rows;
+            cols = matrix.cols;
+            pMatrix = new T[rows * cols];
+            for (int i = 0; i < rows * cols; i++)
+            {
+                pMatrix[i] = matrix.pMatrix[i];
+            }
+        }
+        return *this;
+    }
+
+
     Matrix operator + (const Matrix & matrix) //перегрузка оператора + для сложения матриц
     {
         if (rows == matrix.rows && cols == matrix.cols) {
@@ -452,6 +488,28 @@ int main ()
     cout << B.Det() << endl << endl;
     cout << "Определитель матрицы C:" << endl;
     cout << C.Det() << endl << endl;
+
+    Matrix<int> zeroMat = Matrix<int>::zeroMatrix(3, 3); // Пример использования статических методов создания нулевой и единичной матриц
+    Matrix<int> identityMat = Matrix<int>::identityMatrix(4);
+
+    cout << "Нулевая матрица: " << zeroMat.getRows() << "x" << zeroMat.getCols() << endl;
+    zeroMat.printMatrix();
+    cout << "Еденичная матрица: " << identityMat.getRows() << "x" << identityMat.getCols() << endl;
+    identityMat.printMatrix();
+
+
+    Matrix<int> matrix1(2, 2); // Пример работы оператора присваивания
+    matrix1.inputFromConsole();
+
+    Matrix<int> matrix2 = matrix1; 
+    cout << "Матрица 2 (скопированная с 1):" << endl;
+    matrix2.printMatrix();
+
+    Matrix<int> matrix3;
+    matrix3 = matrix1;
+    cout << "Матрица 3 (присвоенная с 1):" << endl;
+    matrix3.printMatrix();
+
 
     return 0;
 }
